@@ -134,7 +134,13 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int = TODO()
+): Int {
+    if ((kingX == rookX || kingY == rookY) && kingY - bishopY == kingX - bishopX) return 3
+    if ((kingX == rookX || kingY == rookY) && kingY - bishopY == bishopX - kingX) return 3
+    if (kingX == rookX || kingY == rookY) return 1
+    if (kingY - bishopY == kingX - bishopX || kingY - bishopY == bishopX - kingX) return 2
+    else return 0
+}
 
 /**
  * Простая (2 балла)
