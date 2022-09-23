@@ -1,6 +1,6 @@
 @file:Suppress("UNUSED_PARAMETER", "ConvertCallChainIntoSequence")
 
-package lesson6.task1
+package lesson8.task1
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13

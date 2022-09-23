@@ -5,6 +5,8 @@ package lesson2.task1
 import lesson1.task1.discriminant
 import kotlin.math.max
 import kotlin.math.sqrt
+import kotlin.math.pow
+import kotlin.*
 
 // Урок 2: ветвления (здесь), логический тип (см. 2.2).
 // Максимальное количество баллов = 6
@@ -71,19 +73,17 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
 fun ageDescription(age: Int): String {
     if (age > 9) {
         val numbers = age % 100
-        if (numbers > 10 && numbers < 15) return age.toString() + " лет"
+        if (numbers > 10 && numbers < 15) return "$age лет"
         else {
             val number = numbers % 10
-            if (number == 1) return age.toString() + " год"
-            if (number == 2 || number == 3 || number == 4) return age.toString() + " года"
-            else return age.toString() + " лет"
+            if (number == 1) return "$age год"
+            if (number > 4) return "$age лет"
+            else return "$age года"
         }
     }
-    else {
-        if (age == 1) return age.toString() + " год"
-        if (age == 2 || age == 3 || age == 4) return age.toString() + " года"
-        else return age.toString() + " лет"
-    }
+    if (age == 1) return "$age год"
+    if (age > 4) return "$age лет"
+    else return "$age года"
 }
 
 /**
@@ -97,7 +97,14 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double = TODO()
+): Double {
+    val halfway = (t1 * v1 + t2 * v2 + t3 * v3) / 2
+    return when {
+        t1 * v1 >= halfway -> halfway / v1
+        t1 * v1 + t2 * v2 >= halfway -> (halfway - t1 * v1) / v2 + t1
+        else -> (halfway - t1 * v1 - t2 * v2) / v3 + t1 + t2
+    }
+}
 
 /**
  * Простая (2 балла)
@@ -150,7 +157,15 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val maximum = maxOf(a, b, c)
+    return when {
+        a + b < c || a + c < b || b + c < a -> -1
+        maximum.pow(2.0) == a.pow(2.0) + b.pow(2.0) + c.pow(2.0) - maximum.pow(2.0) -> 1
+        maximum.pow(2.0) > a.pow(2.0) + b.pow(2.0) + c.pow(2.0) - maximum.pow(2.0) -> 2
+        else -> 0
+    }
+}
 
 /**
  * Средняя (3 балла)
@@ -161,25 +176,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if (b < c || d < a) {
-        return -1
-    }
-    if (b == c || d == a) {
-        return 0
-    }
-    if (c <= a && b <= d) {
-        return b - a
-    }
-    if (a <= c && d <= b) {
-        return d - c
-    }
-    if (a < c && b < d) {
-        return b - c
-    }
-    if (c < a && d < b && a < d) {
-        return d - a
-    }
-    else {
-        return -1
+    return when {
+        b < c || d < a -> -1
+        b == c || d == a -> 0
+        c <= a && b <= d -> b - a
+        a <= c && d <= b -> d - c
+        a < c && b < d -> b - c
+        c < a && d < b && a < d -> d - a
+        else -> -1
     }
 }
