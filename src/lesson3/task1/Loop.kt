@@ -138,12 +138,10 @@ fun collatzSteps(x: Int): Int {
     var number = x
     var count = 0
     while (number > 1) {
+        count++
         if (number % 2 == 0) {
-            count ++
             number /= 2
-        }
-        else {
-            count ++
+        } else {
             number = number * 3 + 1
         }
     }
@@ -157,8 +155,8 @@ fun collatzSteps(x: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    val maximum = maxOf(m, n)
-    for (i in maximum .. m * n) {
+    val minimum = minOf(m, n)
+    for (i in minimum..m * n step minimum) {
         if (i % m == 0 && i % n == 0) return i
     }
     return m * n
@@ -257,7 +255,20 @@ fun sin(x: Double, eps: Double): Double {
  * Подумайте, как добиться более быстрой сходимости ряда при больших значениях x.
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    val corner = x % (2 * PI)
+    var number = 1000.0
+    var n = 0
+    var result = 0.0
+    var sign = 1
+    while (abs(number) >= eps) {
+        number = corner.pow(n) / factorial(n)
+        result += sign * number
+        sign *= -1
+        n += 2
+    }
+    return result
+}
 
 /**
  * Сложная (4 балла)
