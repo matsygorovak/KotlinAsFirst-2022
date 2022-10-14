@@ -75,12 +75,16 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int =
-    when {
-        n / 10 > 0 -> digitNumber(n / 10) + digitNumber(n % 10)
-        else -> 1
+fun digitNumber(n: Int): Int {
+    var count = 0
+    var n1 = n
+    if (n == 0) return 1
+    while (abs(n1) != 0) {
+        count += 1
+        n1 /= 10
     }
-
+    return count
+}
 
 /**
  * Простая (2 балла)
@@ -149,13 +153,20 @@ fun collatzSteps(x: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    val minimum = minOf(m, n)
-    for (i in minimum..m * n step minimum) {
-        if (i % m == 0 && i % n == 0) return i
+fun maxCommonDivisor(m: Int, n: Int): Int {
+    var m1 = m
+    var n1 = n
+    while (m1 != 0 && n1 != 0) {
+        if (m1 > n1) {
+            m1 %= n1
+        } else {
+            n1 %= m1
+        }
     }
-    return m * n
+    return maxOf(m1, n1)
 }
+
+fun lcm(m: Int, n: Int): Int = m * n / maxCommonDivisor(m, n)
 
 /**
  * Средняя (3 балла)
@@ -164,12 +175,7 @@ fun lcm(m: Int, n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    for (i in 2..minOf(m, n)) {
-        if (m % i == 0 && n % i == 0) return false
-    }
-    return true
-}
+fun isCoPrime(m: Int, n: Int): Boolean = m * n == lcm(m, n)
 
 /**
  * Средняя (3 балла)
