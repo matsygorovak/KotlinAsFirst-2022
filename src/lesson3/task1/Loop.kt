@@ -7,6 +7,7 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.PI
 
+
 // Урок 3: циклы
 // Максимальное количество баллов = 9
 // Рекомендуемое количество баллов = 7
@@ -289,7 +290,25 @@ fun cos(x: Double, eps: Double): Double {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var count = 0
+    var number = 0.0
+    var numbers = 0
+    while (count < n) {
+        number += 1.0
+        numbers = number.pow(2).toInt()
+        count += digitNumber(numbers)
+    }
+    if (count == n) return numbers % 10
+    else {
+        var repeat = count - n
+        while (repeat > 0) {
+            numbers /= 10
+            repeat -= 1
+        }
+        return numbers % 10
+    }
+}
 
 /**
  * Сложная (5 баллов)
@@ -300,4 +319,27 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var count = 1
+    var number1 = 0
+    var number2 = 0
+    var numbers = 1
+    while (count < n) {
+        number1 = number2
+        number2 = numbers
+        numbers = number1 + number2
+        count += digitNumber(numbers)
+    }
+    if (count == n) return numbers % 10
+    else {
+        var repeat = count - n
+        while (repeat > 0) {
+            numbers /= 10
+            repeat -= 1
+        }
+        return numbers % 10
+    }
+}
+
+
+
