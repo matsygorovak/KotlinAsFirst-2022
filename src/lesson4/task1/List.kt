@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson1.task1.discriminant
 import kotlin.math.sqrt
+import kotlin.math.pow
 
 // Урок 4: списки
 // Максимальное количество баллов = 12
@@ -175,7 +176,15 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int = TODO()
+fun polynom(p: List<Int>, x: Int): Int {
+    var c = 0
+    var j = 1
+    for (i in p.indices) {
+        c += p[i] * j
+        j *= x
+    }
+    return c
+}
 
 /**
  * Средняя (3 балла)
@@ -187,7 +196,16 @@ fun polynom(p: List<Int>, x: Int): Int = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
+fun accumulate(list: MutableList<Int>): MutableList<Int> {
+    var c = 0
+    if (list.isNotEmpty()) {
+        for (i in 0 until list.size) {
+            list[i] += c
+            c = list[i]
+        }
+    }
+    return list
+}
 
 /**
  * Средняя (3 балла)
@@ -196,7 +214,20 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    val result = mutableListOf<Int>()
+    var number = n
+    while (number > 1) {
+        for (i in 2..number) {
+            if (number % i == 0) {
+                result.add(i)
+                number /= i
+                break
+            }
+        }
+    }
+    return result.sorted()
+}
 
 /**
  * Сложная (4 балла)
