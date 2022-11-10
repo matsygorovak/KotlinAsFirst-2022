@@ -160,14 +160,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.
  */
-fun times(a: List<Int>, b: List<Int>): Int {
-    var c = 0
-    for (i in a.indices) {
-        c += a[i] * b[i]
-    }
-    return c
-}
-
+fun times(a: List<Int>, b: List<Int>): Int = a.mapIndexed { idx, value -> value * b[idx] }.sum()
 
 /**
  * Средняя (3 балла)
@@ -177,15 +170,8 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int {
-    var c = 0
-    var j = 1
-    for (i in p.indices) {
-        c += p[i] * j
-        j *= x
-    }
-    return c
-}
+fun polynom(p: List<Int>, x: Int): Int =
+    p.mapIndexed { idx, value -> value * x.toDouble().pow(idx.toDouble()).toInt() }.sum()
 
 /**
  * Средняя (3 балла)
@@ -250,11 +236,11 @@ fun convert(n: Int, base: Int): List<Int> {
     var number = n
     val result = mutableListOf<Int>()
     while (number >= base) {
-        result.add(0, number % base)
+        result.add(number % base)
         number /= base
     }
-    result.add(0, number)
-    return result
+    result.add(number)
+    return result.reversed()
 }
 
 /**
@@ -268,18 +254,11 @@ fun convert(n: Int, base: Int): List<Int> {
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, n.toString(base) и подобные), запрещается.
  */
-fun convertToString(n: Int, base: Int): String {
-    val convert = convert(n, base)
-    var result = ""
-    for (i in convert.indices) {
-        result += if (convert[i] > 9) {
-            ('a' - 10 + convert[i]).toString()
-        } else {
-            convert[i].toString()
-        }
-    }
-    return result
-}
+fun convertToString(n: Int, base: Int): String = convert(n, base).toMutableList().map {
+    if (it > 9) "${'a' - 10 + it}"
+    else "$it"
+}.joinToString(separator = "")
+
 
 /**
  * Средняя (3 балла)
@@ -343,8 +322,6 @@ fun roman(n: Int): String {
     }
     return result.joinToString(separator = "")
 }
-
-
 
 
 /**

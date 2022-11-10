@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import java.util.*
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -139,8 +141,13 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
-    TODO()
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): MutableMap<String, String> {
+    for ((key, value) in b) {
+        if (value == a[key]) {
+            a.remove(key)
+        }
+    }
+    return a
 }
 
 /**
@@ -150,7 +157,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>) {
  * В выходном списке не должно быть повторяющихся элементов,
  * т. е. whoAreInBoth(listOf("Марат", "Семён, "Марат"), listOf("Марат", "Марат")) == listOf("Марат")
  */
-fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
+fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = a.intersect(b).toList()
 
 /**
  * Средняя (3 балла)
@@ -169,7 +176,17 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *     mapOf("Emergency" to "911", "Police" to "02")
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
-fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> = TODO()
+fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
+    val mapA = mapA.toMutableMap()
+    for ((key, value) in mapB) {
+        if (mapA[key] == null) {
+            mapA[key] = value
+        } else if (value != mapA[key]) {
+            mapA[key] += ", $value"
+        }
+    }
+    return mapA
+}
 
 /**
  * Средняя (4 балла)
@@ -181,7 +198,26 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *   averageStockPrice(listOf("MSFT" to 100.0, "MSFT" to 200.0, "NFLX" to 40.0))
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
-fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> = TODO()
+fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
+    val result = mutableMapOf<String, Double>()
+    var count = 1
+    val counts = mutableMapOf<String, Int>()
+    for ((key, value) in stockPrices) {
+        if (result.contains(key)) {
+            result[key] = result[key]!! + value
+            count += 1
+            counts[key] = count
+        } else {
+            count = 1
+            result[key] = value
+            counts[key] = count
+        }
+    }
+    for ((key) in result) {
+        result[key] = result[key]!! / counts[key]!!
+    }
+    return result
+}
 
 /**
  * Средняя (4 балла)
@@ -198,7 +234,17 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  *     "печенье"
  *   ) -> "Мария"
  */
-fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? = TODO()
+fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
+    var result: String? = null
+    var number = 10000000.0
+    for ((key, value) in stuff) {
+        if (kind == value.first && number > value.second) {
+            result = key
+            number = value.second
+        }
+    }
+    return result
+}
 
 /**
  * Средняя (3 балла)
@@ -209,7 +255,7 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  * Например:
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
-fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
+fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.toSet() == word.toSet().intersect(chars.toSet())
 
 /**
  * Средняя (4 балла)
@@ -223,7 +269,9 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = TODO()
  * Например:
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
-fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
+fun extractRepeats(list: List<String>): Map<String, Int> =
+    list.groupingBy(keySelector = { it.toCharArray().sorted().joinToString() }).eachCount().filterValues { it > 1 }
+
 
 /**
  * Средняя (3 балла)
@@ -237,7 +285,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean = extractRepeats(words).isNotEmpty()
 
 /**
  * Сложная (5 баллов)
@@ -274,7 +322,6 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *        )
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
-
 /**
  * Сложная (6 баллов)
  *
