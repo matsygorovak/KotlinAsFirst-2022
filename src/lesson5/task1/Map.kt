@@ -200,17 +200,14 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
     val result = mutableMapOf<String, Double>()
-    var count = 1
     val counts = mutableMapOf<String, Int>()
     for ((key, value) in stockPrices) {
         if (result.contains(key)) {
             result[key] = result[key]!! + value
-            count += 1
-            counts[key] = count
+            counts[key] = counts[key]!! + 1
         } else {
-            count = 1
             result[key] = value
-            counts[key] = count
+            counts[key] = 1
         }
     }
     for ((key) in result) {
@@ -270,7 +267,7 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean = word.toSet() == wor
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> =
-    list.groupingBy(keySelector = { it.toCharArray().sorted().joinToString() }).eachCount().filterValues { it > 1 }
+    list.groupingBy(keySelector = { it }).eachCount().filterValues { it > 1 }
 
 
 /**
@@ -285,7 +282,8 @@ fun extractRepeats(list: List<String>): Map<String, Int> =
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = extractRepeats(words).isNotEmpty()
+fun hasAnagrams(words: List<String>): Boolean =
+    words.groupingBy(keySelector = { it.toCharArray().sorted().joinToString() }).eachCount().filterValues { it > 1 }.isNotEmpty()
 
 /**
  * Сложная (5 баллов)

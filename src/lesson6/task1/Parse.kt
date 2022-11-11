@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import lesson2.task2.daysInMonth
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -74,7 +76,35 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun dateStrToDigit(str: String): String {
+    val elements = str.split(" ")
+    if (elements.size != 3) return ""
+    val part = str.split(" ")[1]
+    val months = listOf(
+        "января",
+        "февраля",
+        "марта",
+        "апреля",
+        "мая",
+        "июня",
+        "июля",
+        "августа",
+        "сентября",
+        "октября",
+        "ноября",
+        "декабря"
+    )
+    if (part !in months) {
+        return ""
+    }
+    val day = twoDigitStr(str.split(" ")[0].toInt())
+    val year = str.split(" ")[2]
+    val month = twoDigitStr(months.indexOf(part) + 1)
+    if (str.split(" ")[0].toInt() <= daysInMonth(month.toInt(), str.split(" ")[2].toInt())) {
+        return "$day.$month.$year"
+    }
+    return ""
+}
 
 /**
  * Средняя (4 балла)
@@ -86,7 +116,39 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    if (Regex("""\d+\.\d+\.\d+""").matches(digital)) {
+        var part = digital.split(".")[1].toInt()
+        val months = listOf(
+            "января",
+            "февраля",
+            "марта",
+            "апреля",
+            "мая",
+            "июня",
+            "июля",
+            "августа",
+            "сентября",
+            "октября",
+            "ноября",
+            "декабря"
+        )
+        if (part != 10 && part != 11 && part != 12) {
+            part %= 10
+            if (part <= 0 || part > 12) {
+                return ""
+            }
+        }
+        val day = digital.split(".")[0].toInt()
+        val year = digital.split(".")[2]
+        val month = months[part - 1]
+        if (digital.split(".")[0].toInt() <= daysInMonth(part, digital.split(".")[2].toInt())) {
+            return "$day $month $year"
+        }
+        return ""
+    }
+    return ""
+}
 
 /**
  * Средняя (4 балла)
