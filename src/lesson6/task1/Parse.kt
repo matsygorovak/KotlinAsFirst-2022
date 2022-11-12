@@ -116,6 +116,7 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
+
 fun dateDigitToStr(digital: String): String {
     if (Regex("""\d+\.\d+\.\d+""").matches(digital)) {
         var part = digital.split(".")[1].toInt()
