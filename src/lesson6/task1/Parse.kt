@@ -135,10 +135,10 @@ fun dateDigitToStr(digital: String): String {
             "декабря"
         )
         if (part != 10 && part != 11 && part != 12) {
-            part %= 10
             if (part <= 0 || part > 12) {
                 return ""
             }
+            part %= 10
         }
         val day = digital.split(".")[0].toInt()
         val year = digital.split(".")[2]
@@ -165,7 +165,18 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    var result = ""
+    if (Regex("""[0-9\+\-\s\(\)]*""").matches(phone) && !Regex("""\(\)""").containsMatchIn(phone)) {
+        for (i in phone) {
+            if (Regex("""[0-9\+]""").matches(i.toString())) {
+                result += i.toString()
+            }
+        }
+        return result
+    }
+    return ""
+}
 
 /**
  * Средняя (5 баллов)
@@ -177,7 +188,19 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    var result = -1
+    if (Regex("""(\d+|\d\s)*[(\%\s)(\-\s)]+""").containsMatchIn(jumps) &&
+        Regex("""[0-9\-\%\s]+""").matches(jumps)) {
+        var numbers = Regex("""[\s\-\%]""").split(jumps)
+        for (i in numbers) {
+            if (i.isNotEmpty()) {
+                result = maxOf(result, i.toInt())
+            }
+        }
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
@@ -190,7 +213,18 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    var result = -1
+    if (Regex("""\d+\s[-%+]+""").containsMatchIn(jumps)) {
+        val plus =
+            Regex("""\d+""").findAll(Regex("""\d+\s[%-]*\+""").findAll(jumps).map { it.value }
+                .toList().toString()).map { it.value }.toList()
+        for (i in plus) {
+            result = maxOf(result, i.toInt())
+        }
+    }
+    return result
+}
 
 /**
  * Сложная (6 баллов)
@@ -201,7 +235,22 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    if (Regex("""\d+(\s[+-]\s\d+)*""").matches(expression)) {
+        val string = Regex("""\d+""").findAll(expression).map { it.value }.toList()
+        val sign = Regex("""[-+]""").findAll(expression).map { it.value }.toList()
+        var result = string[0].toInt()
+        for (i in 1 until string.size) {
+            if (sign[i - 1] == "+") {
+                result += string[i].toInt()
+            } else {
+                result -= string[i].toInt()
+            }
+        }
+        return result
+    }
+    throw IllegalArgumentException(expression)
+}
 
 /**
  * Сложная (6 баллов)
@@ -212,7 +261,17 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var count = 0
+    val string = Regex("""\s""").split(str).map { it.lowercase() }.toList()
+    for (i in 0 until string.size - 1) {
+        if (string[i] == string[i + 1]) {
+            return count
+        }
+        count += string[i].length + 1
+    }
+    return -1
+}
 
 /**
  * Сложная (6 баллов)
