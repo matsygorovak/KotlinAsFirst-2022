@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class Tests {
     @Test
@@ -133,7 +134,8 @@ class Tests {
     @Tag("7")
     fun computeDeviceCells() {
         assertEquals(listOf(0, 0, 0, 0, 0, 1, 1, 1, 1, 1), computeDeviceCells(10, "+>+>+>+>+", 10000))
-        assertEquals(listOf(-1, -1, -1, -1, -1, 0, 0, 0, 0, 0),
+        assertEquals(
+            listOf(-1, -1, -1, -1, -1, 0, 0, 0, 0, 0),
             computeDeviceCells(10, "<-<-<-<-<-", 10000)
         )
         assertEquals(listOf(1, 1, 1, 1, 1, 0, 0, 0, 0, 0), computeDeviceCells(10, "- <<<<< +[>+]", 10000))

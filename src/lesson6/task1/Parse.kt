@@ -4,6 +4,7 @@ package lesson6.task1
 
 import lesson2.task2.daysInMonth
 
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -191,7 +192,8 @@ fun flattenPhoneNumber(phone: String): String {
 fun bestLongJump(jumps: String): Int {
     var result = -1
     if (Regex("""(\d+|\d\s)*[(\%\s)(\-\s)]+""").containsMatchIn(jumps) &&
-        Regex("""[0-9\-\%\s]+""").matches(jumps)) {
+        Regex("""[0-9\-\%\s]+""").matches(jumps)
+    ) {
         var numbers = Regex("""[\s\-\%]""").split(jumps)
         for (i in numbers) {
             if (i.isNotEmpty()) {
@@ -336,3 +338,8 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
+
+
+
+
