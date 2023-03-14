@@ -66,7 +66,7 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
 fun deleteMarked(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     for (line in File(inputName).readLines()) {
-        if (!Regex("""_[^^]*""").matches(line)) {
+        if (!Regex("""_.*""").matches(line)) {
             writer.write(line)
             writer.newLine()
         }
@@ -369,7 +369,61 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    writer.write("<html>")
+    writer.write("<body>")
+    writer.write("<p>")
+    val symbol = listOf("<i>", "<b>", "<s>", "</i>", "</b>", "</s>")
+    for (line in File(inputName).readLines()) {
+        if (line.isEmpty()) {
+            writer.write("</p>")
+            writer.write("<p>")
+        }
+        for (i in 1 until line.length) {
+            if (Regex("""[*~]""").matches(line[i - 1].toString())) {
+                when {
+                    Regex("""~~""").matches(line[i - 1].toString() + line[i].toString())
+                            && (i == 1 || line[i - 2].toString() == " ") -> writer.write(symbol[2])
+
+                    Regex("""~~""").matches(line[i - 1].toString() + line[i].toString()) -> writer.write(symbol[5])
+                    Regex("""[*]{2}""").matches(line[i - 1].toString() + line[i].toString())
+                            && (i == 1 || line[i - 2].toString() == " ") && line[i - 2].toString() != "*" -> writer.write(
+                        symbol[1]
+                    )
+
+                    Regex("""[*]{2}""").matches(line[i - 1].toString() + line[i].toString())
+                            && (i == 1 || line[i - 2].toString() == " ") -> writer.write(symbol[0])
+
+                    Regex("""[*]{2}""").matches(line[i - 1].toString() + line[i].toString()) && line[i - 2].toString() != "*" -> writer.write(
+                        symbol[4]
+                    )
+
+                    Regex("""[*]{2}""").matches(line[i - 1].toString() + line[i].toString()) -> writer.write(symbol[3])
+                    Regex("""[*]""").matches(line[i - 1].toString())
+                            && (i == 1 || line[i - 2].toString() == " ") -> writer.write(symbol[0])
+
+                    Regex("""[*]""").matches(line[i - 1].toString()) && line[i - 2].toString() != "*" -> writer.write(
+                        symbol[3]
+                    )
+                }
+                if (i == line.length - 1) {
+                    writer.write(line[i].toString())
+                }
+            } else {
+                if (i == line.length - 1 && Regex("""[*]""").matches(line[i].toString())) {
+                    writer.write(symbol[3])
+                } else if (i == line.length - 1) {
+                    writer.write(line[i - 1].toString() + line[i].toString())
+                } else {
+                    writer.write(line[i - 1].toString())
+                }
+            }
+        }
+    }
+    writer.write("</p>")
+    writer.write("</body>")
+    writer.write("</html>")
+    writer.close()
 }
 
 /**
@@ -470,7 +524,66 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlLists(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    writer.write("<html>")
+    writer.write("<body>")
+    writer.write("<p>")
+    var whitespace = -1
+    val close = mutableListOf<String>()
+    for (line in File(inputName).readLines()) {
+        if (Regex("""[*]""").matches(line.trim()[0].toString()) && line.isNotEmpty()) {
+            if (whitespace < Regex(""" """).findAll(line).count()) {
+                whitespace = Regex(""" """).findAll(line).count()
+                writer.write("<ul>")
+                close.add("</ul>")
+                close.add("</li>")
+            } else if (whitespace > Regex(""" """).findAll(line).count()) {
+                while (close[-1] != "</li>" && close.isNotEmpty()) {
+                    writer.write(close[-1])
+                    close.removeLast()
+                }
+                writer.write(close[-1])
+                close.removeLast()
+                close.add("</li>")
+                whitespace = Regex(""" """).findAll(line).count()
+            } else {
+                writer.write("</li>")
+            }
+            writer.write("<li>" + line.trim().removePrefix("*"))
+        }
+        if (Regex("""[0-9]+\..""").matches(line.trim())) {
+            if (whitespace < Regex(""" """).findAll(line).count()) {
+                whitespace = Regex(""" """).findAll(line).count()
+                writer.write("<ol>")
+                close.add("</ol>")
+                close.add("</li>")
+            } else if (whitespace > Regex(""" """).findAll(line).count()) {
+                while (close[-1] != "</li>" && close.isNotEmpty()) {
+                    writer.write(close[-1])
+                    close.removeLast()
+                }
+                writer.write(close[-1])
+                close.removeLast()
+                close.add("</li>")
+                whitespace = Regex(""" """).findAll(line).count()
+            } else {
+                writer.write("</li>")
+            }
+            writer.write("<li>" + Regex("""[0-9]+\. """).replace(line.trim(), ""))
+        }
+        if (line.isEmpty()) {
+            while (close[-1] != "</li>" && close.isNotEmpty()) {
+                writer.write(close[-1])
+                close.removeLast()
+            }
+            writer.write("/li")
+        }
+        println(close)
+    }
+    writer.write("</p>")
+    writer.write("</body>")
+    writer.write("</html>")
+    writer.close()
 }
 
 /**
